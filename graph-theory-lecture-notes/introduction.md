@@ -1,5 +1,5 @@
 Testing
 
-$x+1=3$
+$\int_0^1 \sin (x) \ \text{d}x$
 
 testing
