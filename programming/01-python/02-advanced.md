@@ -1,6 +1,7 @@
-# Advanced Python Topics: Beyond 65% Proficiency
+# Python Introduction: Advanced Python Topics
 
 ## Table of Contents
+
 1. [Generators and Iterators](#generators-and-iterators)
 2. [Decorators](#decorators)
 3. [Context Managers](#context-managers)
@@ -10,6 +11,7 @@
 ## Generators and Iterators
 
 ### Iterators
+
 An iterator is an object that implements the iterator protocol through `__iter__()` and `__next__()` methods.
 
 ```python
@@ -32,6 +34,7 @@ for num in CountDown(5):
 ```
 
 ### Generators
+
 Generators provide a more concise way to create iterators using the `yield` keyword.
 
 ```python
@@ -46,6 +49,7 @@ for num in countdown(5):
 ```
 
 ### Generator Expressions
+
 Similar to list comprehensions but they produce values on-demand.
 
 ```python
@@ -54,11 +58,12 @@ squares_list = [x**2 for x in range(1000000)]
 
 # Generator expression (creates values on-demand)
 squares_gen = (x**2 for x in range(1000000))
-
-# The generator version uses much less memory
 ```
 
+The generator version uses much less memory
+
 ### Generator Methods
+
 Generators have special methods: `send()`, `throw()`, and `close()`.
 
 ```python
@@ -68,13 +73,34 @@ def echo_generator():
         value = yield value
 
 gen = echo_generator()
-print(next(gen))      # "Ready"
+print(next(gen))          # "Ready"
 print(gen.send("Hello"))  # "Hello"
 print(gen.send(42))       # 42
-gen.close()           # Terminate the generator
+gen.close()               # Terminate the generator
+```
+
+`send(value)` is like `next()`, but with a bonus: it resumes the generator and sends a value back into the generator, which becomes the result of the previous `yield` expression.
+
+This generator first yields `"Ready"` and pauses, waiting to receive a value. Each subsequent `send()` resumes the generator, passes a value into it, and yields that value back at the next `yield`. Calling `next()` after the first yield is equivalent to `send(None)`, assigning `None` to `value`. When `close()` is called, a `GeneratorExit` is raised at the paused yield, and the generator exits silently unless `GeneratorExit` is explicitly handled or a finally block is used for cleanup.
+
+The `throw()` method in a generator allows you to raise an exception at the point where the generator is paused, enabling controlled error handling within the generator's execution flow:
+
+```python
+def my_generator():
+    try:
+        yield 1
+    except ValueError as e:
+        print(f"Caught: {e}")
+        yield 2
+
+gen = my_generator()
+print(next(gen))  # Outputs: 1
+gen.throw(ValueError, "An error occurred")  # Caught: An error occurred
+print(next(gen))  # Outputs: 2
 ```
 
 ### Chaining Generators
+
 Generators can be combined using yield from.
 
 ```python
@@ -86,9 +112,12 @@ combined = chain_generators([1, 2, 3], [4, 5, 6])
 list(combined)  # [1, 2, 3, 4, 5, 6]
 ```
 
+The `yield from` statement in Python allows a generator to delegate yielding to another generator or iterable, automatically propagating exceptions raised in the sub-generator and capturing any return value from it, thereby simplifying code composition and error handling.
+
 ## Decorators
 
 ### Basic Decorators
+
 Decorators are functions that modify the behavior of other functions.
 
 ```python
@@ -107,7 +136,10 @@ def add(a, b):
 add(3, 5)  # Logs the call and result
 ```
 
+When a function is decorated using the `@decorator_name` syntax, the original function's name in the namespace is replaced by the wrapper function returned by the decorator, effectively modifying its behavior.
+
 ### Decorators with Arguments
+
 Decorators can accept their own arguments.
 
 ```python
@@ -128,8 +160,11 @@ def greet(name):
 greet("Alice")  # Returns ["Hello, Alice!", "Hello, Alice!", "Hello, Alice!"]
 ```
 
+Note that this involves two function calls at the time of definition, to get the wrapper function that will actually be called at the time of invocation.
+
 ### Class Decorators
-Decorators can also be implemented as classes.
+
+A decorator can also be defined using a class that implements the `__call__` method, allowing instances of the class to be used as decorators. To persist state in a function-defined decorator, you can use the `nonlocal` keyword for variables in enclosing scopes or utilize mutable objects like lists or dictionaries.
 
 ```python
 class CountCalls:
@@ -151,6 +186,7 @@ say_hello()  # "say_hello has been called 2 times"
 ```
 
 ### Preserving Metadata
+
 Use `functools.wraps` to maintain the original function's metadata.
 
 ```python
@@ -173,6 +209,7 @@ print(add.__doc__)   # "Add two numbers."
 ```
 
 ### Stacking Decorators
+
 Multiple decorators can be applied to a single function.
 
 ```python
@@ -188,6 +225,7 @@ def function():
 ## Context Managers
 
 ### Using Context Managers
+
 Context managers control resource acquisition and release.
 
 ```python
@@ -198,6 +236,7 @@ with open("file.txt", "r") as file:
 ```
 
 ### Creating Context Managers using Classes
+
 Implement `__enter__` and `__exit__` methods.
 
 ```python
@@ -222,6 +261,7 @@ with Timer():
 ```
 
 ### Creating Context Managers using contextlib
+
 The `contextlib` module provides utilities for working with context managers.
 
 ```python
@@ -233,6 +273,7 @@ def timer():
     start = time.time()
     try:
         yield  # This is where the with-block's code executes
+               # You can also yield a value (with ... as ...)
     finally:
         end = time.time()
         print(f"Elapsed time: {end - start:.2f} seconds")
@@ -244,6 +285,7 @@ with timer():
 ```
 
 ### Nested Context Managers
+
 Context managers can be nested.
 
 ```python
@@ -277,6 +319,7 @@ class DatabaseTransaction:
 ## Advanced Functions
 
 ### Partial Functions
+
 Create new functions with pre-filled arguments.
 
 ```python
@@ -291,6 +334,7 @@ double(5)  # 10
 ```
 
 ### Closures
+
 Functions that capture and remember the environment they were created in.
 
 ```python

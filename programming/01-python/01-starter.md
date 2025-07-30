@@ -127,6 +127,8 @@ type(x)            # Returns the type
 isinstance(x, int) # Checks if x is an integer
 ```
 
+`type(x) == int` checks for an exact type match, while `isinstance(x, int)` checks for `int` or its subclasses, making the latter more versatile.
+
 ## Operators
 
 ### Arithmetic Operators
@@ -248,6 +250,41 @@ def person_details(**kwargs):
 
 person_details(name="John", age=30, city="New York")
 ```
+
+The `*` prefix in Python is also used for unpacking iterables into lists or function arguments, as shown in the following examples:
+
+1. **Unpacking a List**:
+
+   ```python
+   my_list = [1, 2, 3]
+   new_list = [0, *my_list, 4]  # new_list becomes [0, 1, 2, 3, 4]
+   ```
+
+2. **Merging Lists**:
+
+   ```python
+   list1 = [1, 2]
+   list2 = [3, 4]
+   merged = [*list1, *list2]  # merged becomes [1, 2, 3, 4]
+   ```
+
+3. **Function Calls**:
+
+   ```python
+   def add(a, b):
+       return a + b
+
+   args = (1, 2)
+   result = add(*args)  # result becomes 3
+   ```
+
+4. **Dictionary Unpacking** (using `**`):
+
+   ```python
+   dict1 = {'a': 1, 'b': 2}
+   dict2 = {'c': 3}
+   merged_dict = {**dict1, **dict2}  # merged_dict becomes {'a': 1, 'b': 2, 'c': 3}
+   ```
 
 ### Lambda Functions
 
